@@ -1,0 +1,26 @@
+{
+  "window": {
+    "width": 800.0,
+    "height": 300.0,
+    "x": 100.0,
+    "y": 100.0,
+    "always_on_top": true,
+    "click_through": true
+  },
+  "visualization": {
+    "key_size": 50.0,
+    "key_gap": 5.0,
+    "split_gap": 40.0,
+    "show_layer_name": true,
+    "show_modifiers": true
+  },
+  "keymap": {
+    "keymap_path": "/home/jk/qmk_firmware/keyboards/crkbd/keymaps/jk/keymap.c",
+    "layer_names": [
+      "Base",
+      "Lower",
+      "Raise",
+      "Adjust"
+    ]
+  }
+}

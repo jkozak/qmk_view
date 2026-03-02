@@ -1,0 +1,19 @@
+[workspace]
+members = ["qmkview-core", "qmkview-gui"]
+resolver = "2"
+
+[package]
+name = "qmkview"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+qmkview-core = { path = "qmkview-core" }
+qmkview-gui = { path = "qmkview-gui" }
+tokio = { version = "1.0", features = ["full"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+[[bin]]
+name = "qmkview"
+path = "src/main.rs"

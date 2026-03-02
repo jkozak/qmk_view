@@ -1,0 +1,13 @@
+[package]
+name = "qmkview-gui"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+qmkview-core = { path = "../qmkview-core" }
+egui = "0.29"
+eframe = { version = "0.29", features = ["default"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+crossbeam-channel = "0.5"
+tracing = "0.1"
