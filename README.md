@@ -1,10 +1,10 @@
-# QMKView - Real-time QMK Keyboard HUD Overlay
+# QMKView - Real-time QMK Keyboard Display Panel
 
-A transparent overlay HUD that displays the current state of your QMK keyboard in real-time, showing available keys per layer with modifiers highlighted.
+A panel that displays the current state of your QMK keyboard in real-time, showing available keys per layer with modifiers highlighted.
 
 ## Features
 
-- Transparent, always-on-top overlay
+- always-on-top panel
 - Real-time visualization of keyboard state via Raw HID
 - 2D keyboard layout showing pressed keys
 - Layer-aware key display
