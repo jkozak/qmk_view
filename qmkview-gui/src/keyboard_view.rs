@@ -113,19 +113,27 @@ impl KeyboardView {
         is_left: bool,
         state: &KeyboardState,
     ) {
+        // Mirror column positions for right hand display
+        let display_col = if is_left {
+            col
+        } else {
+            let max_col = if row == 3 { 2 } else { 5 };
+            max_col - col
+        };
+
         let (x_offset, y_offset) = if row == 3 {
             // Thumb row: use special positioning
-            let (thumb_x, thumb_y) = self.thumb_key_offset(col);
+            let (thumb_x, thumb_y) = self.thumb_key_offset(display_col);
             (
                 (self.key_size + self.key_gap) * thumb_x,
                 (self.key_size + self.key_gap) * thumb_y,
             )
         } else {
             // Regular rows: apply columnar stagger
-            (0.0, self.column_stagger(col) * self.key_size)
+            (0.0, self.column_stagger(display_col) * self.key_size)
         };
 
-        let x = start_pos.x + (col as f32) * (self.key_size + self.key_gap) + x_offset;
+        let x = start_pos.x + (display_col as f32) * (self.key_size + self.key_gap) + x_offset;
         let y = start_pos.y + (row as f32) * (self.key_size + self.key_gap) + y_offset;
 
         let rect = Rect::from_min_size(
@@ -134,7 +142,7 @@ impl KeyboardView {
         );
 
         let is_pressed = state.is_key_pressed(row, col, is_left);
-        let key_def = state.get_key_at(row, col, is_left);
+        let key_def = state.get_key_at(row, display_col, is_left);
 
         let (fill_color, stroke_color, text_color) = if is_pressed {
             (

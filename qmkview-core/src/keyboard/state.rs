@@ -106,10 +106,18 @@ impl KeyboardState {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::keyboard::{KeyType};
+    use crate::keyboard::{KeyType, KeyDef};
 
     fn create_test_layer() -> Layer {
         Layer::new("Test", vec![])
+    }
+
+    fn create_test_layer_with_keys() -> Layer {
+        Layer::new("Test", vec![
+            // Right hand row 0: col 0=Y (inner), col 5=Bksp (pinky)
+            KeyDef { row: 0, col: 0, is_left: false, keycode: "Y".into(), key_type: KeyType::Letter },
+            KeyDef { row: 0, col: 5, is_left: false, keycode: "Bksp".into(), key_type: KeyType::Navigation },
+        ])
     }
 
     #[test]
@@ -157,5 +165,20 @@ mod tests {
         }));
 
         assert!(state.modifiers().shift);
+    }
+
+    #[test]
+    fn test_right_hand_key_lookup() {
+        // Layout stores: col 0=Y (inner), col 5=Bksp (pinky)
+        // This test verifies direct lookup without mirroring (mirroring is done in view layer)
+        let state = KeyboardState::new(vec![create_test_layer_with_keys()]);
+
+        let key = state.get_key_at(0, 0, false);
+        assert!(key.is_some());
+        assert_eq!(key.unwrap().keycode, "Y");
+
+        let key = state.get_key_at(0, 5, false);
+        assert!(key.is_some());
+        assert_eq!(key.unwrap().keycode, "Bksp");
     }
 }
