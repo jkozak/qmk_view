@@ -182,7 +182,10 @@ impl QmkKeymapParser {
         let kc = keycode.trim();
 
         // Handle special cases
-        if kc == "XXXXXXX" || kc == "_______" {
+        if kc == "XXXXXXX" {
+            return "".to_string();
+        }
+        if kc == "_______" {
             return kc.to_string();
         }
 
@@ -199,19 +202,19 @@ impl QmkKeymapParser {
 
         // Convert common keycodes to readable names
         match display {
-            "BSPC" => "⌫",
-            "ENT" | "ENTER" => "↵",
-            "SPC" | "SPACE" => "␣",
-            "TAB" => "⇥",
+            "BSPC" => "Bksp",
+            "ENT" | "ENTER" => "Ret",
+            "SPC" | "SPACE" => "Spc",
+            "TAB" => "Tab",
             "ESC" => "Esc",
-            "LGUI" | "RGUI" => "⌘",
+            "LGUI" | "RGUI" => "Gui",
             "LALT" | "RALT" => "Alt",
             "LCTL" | "RCTL" => "Ctrl",
             "LSFT" | "RSFT" => "Shift",
-            "UP" => "↑",
-            "DOWN" => "↓",
-            "LEFT" => "←",
-            "RIGHT" => "→",
+            "UP" => "Up",
+            "DOWN" => "Down",
+            "LEFT" => "Left",
+            "RIGHT" => "Right",
             "COMM" => ",",
             "DOT" => ".",
             "SLSH" => "/",
@@ -279,11 +282,11 @@ impl QmkKeymapParser {
     }
 
     fn parse_momentary(keycode: &str) -> Option<String> {
-        // MO(1) -> ↓1
+        // MO(1) -> L1
         if keycode.starts_with("MO(") {
             if let Some(close_paren) = keycode.find(')') {
                 let layer = &keycode[3..close_paren];
-                return Some(format!("↓{}", layer));
+                return Some(format!("L{}", layer));
             }
         }
         None
@@ -374,9 +377,11 @@ mod tests {
     #[test]
     fn test_simplify_keycode() {
         assert_eq!(QmkKeymapParser::simplify_keycode("KC_A"), "A");
-        assert_eq!(QmkKeymapParser::simplify_keycode("KC_BSPC"), "⌫");
-        assert_eq!(QmkKeymapParser::simplify_keycode("KC_ENT"), "↵");
-        assert_eq!(QmkKeymapParser::simplify_keycode("XXXXXXX"), "XXXXXXX");
+        assert_eq!(QmkKeymapParser::simplify_keycode("KC_BSPC"), "Bksp");
+        assert_eq!(QmkKeymapParser::simplify_keycode("KC_ENT"), "Ret");
+        assert_eq!(QmkKeymapParser::simplify_keycode("KC_TAB"), "Tab");
+        assert_eq!(QmkKeymapParser::simplify_keycode("KC_SPC"), "Spc");
+        assert_eq!(QmkKeymapParser::simplify_keycode("XXXXXXX"), "");
     }
 
     #[test]

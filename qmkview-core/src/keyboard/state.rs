@@ -118,6 +118,7 @@ impl KeyboardState {
 mod tests {
     use super::*;
     use crate::keyboard::{KeyType, KeyDef};
+    use crate::hid::KeyPosition;
 
     fn create_test_layer() -> Layer {
         Layer::new("Test", vec![])

@@ -133,8 +133,8 @@ mod tests {
     #[test]
     fn test_default_config() {
         let config = Config::default();
-        assert_eq!(config.window.width, 800.0);
-        assert_eq!(config.window.height, 300.0);
+        assert_eq!(config.window.width, 900.0);
+        assert_eq!(config.window.height, 400.0);
         assert!(config.window.always_on_top);
     }
 
