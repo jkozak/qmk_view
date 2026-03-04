@@ -65,6 +65,7 @@ pub enum Message {
         modifiers: Modifiers,
         pressed_keys: Vec<KeyPosition>,
     },
+    DeviceReconnected,
 }
 
 #[derive(Debug, Error)]
@@ -178,6 +179,9 @@ impl Protocol {
                     data[offset + 1] = key.col;
                     data[offset + 2] = if key.is_left { 1 } else { 0 };
                 }
+            }
+            Message::DeviceReconnected => {
+                // Internal message, not sent over HID
             }
         }
 

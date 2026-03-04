@@ -1,4 +1,4 @@
-use crate::hid::{Message, KeyPosition, Modifiers};
+use crate::hid::{Message, Modifiers};
 use super::{Layout, Layer, KeyDef};
 use std::collections::HashSet;
 use tracing::debug;
@@ -59,6 +59,9 @@ impl KeyboardState {
                     self.pressed_keys.insert((key.row, key.col, key.is_left));
                 }
             }
+            Message::DeviceReconnected => {
+                debug!("Device reconnected - layers should be reloaded externally");
+            }
         }
     }
 
@@ -99,6 +102,14 @@ impl KeyboardState {
             &self.layers[self.current_layer as usize].name
         } else {
             "Unknown"
+        }
+    }
+
+    pub fn reload_layers(&mut self, new_layers: Vec<Layer>) {
+        debug!("Reloading layers: {} layers", new_layers.len());
+        self.layers = new_layers;
+        if self.current_layer as usize >= self.layers.len() {
+            self.current_layer = 0;
         }
     }
 }

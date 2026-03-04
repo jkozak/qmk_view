@@ -17,8 +17,9 @@ impl QmkViewApp {
         let state = Arc::new(Mutex::new(KeyboardState::new(layers)));
 
         let state_clone = state.clone();
+        let config_clone = config.clone();
         thread::spawn(move || {
-            Self::hid_reader_thread(state_clone);
+            Self::hid_reader_thread(state_clone, config_clone);
         });
 
         Self {
@@ -47,7 +48,7 @@ impl QmkViewApp {
         Layer::create_default_layers()
     }
 
-    fn hid_reader_thread(state: Arc<Mutex<KeyboardState>>) {
+    fn hid_reader_thread(state: Arc<Mutex<KeyboardState>>, config: Config) {
         info!("Starting HID reader thread");
 
         match HidReader::new() {
@@ -58,7 +59,13 @@ impl QmkViewApp {
                         Some(Ok(msg)) => {
                             debug!("Received HID message: {:?}", msg);
                             if let Ok(mut state) = state.lock() {
-                                state.apply_message(msg);
+                                if matches!(msg, qmkview_core::Message::DeviceReconnected) {
+                                    info!("Device reconnected, reloading keymap");
+                                    let new_layers = Self::load_layers(&config);
+                                    state.reload_layers(new_layers);
+                                } else {
+                                    state.apply_message(msg);
+                                }
                             } else {
                                 error!("Failed to lock state");
                             }

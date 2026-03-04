@@ -91,6 +91,7 @@ impl HidReader {
         let api = HidApi::new()?;
         let mut device: Option<HidDevice> = None;
         let mut buf = [0u8; HID_PACKET_SIZE];
+        let mut first_connection = true;
 
         loop {
             if device.is_none() {
@@ -99,6 +100,15 @@ impl HidReader {
                         info!("Connected to QMK keyboard");
                         dev.set_blocking_mode(true).ok();
                         device = Some(dev);
+
+                        if !first_connection {
+                            info!("Device reconnected, sending reload signal");
+                            if tx.send(Ok(Message::DeviceReconnected)).is_err() {
+                                info!("Receiver dropped, stopping HID reader");
+                                return Ok(());
+                            }
+                        }
+                        first_connection = false;
                     }
                     Err(HidError::DeviceNotFound) => {
                         warn!("QMK keyboard not found, retrying in 2s...");
